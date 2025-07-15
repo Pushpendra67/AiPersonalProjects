@@ -1,0 +1,7 @@
+streamlit
+faiss-cpu
+numpy
+langchain
+langchain-huggingface
+requests
+langchain-community

@@ -1,0 +1,203 @@
+{
+    "products": [
+      {
+        "name": "Rice",
+        "price": 50,
+        "discount": 10,
+        "expiry_date": "2025-12-31"
+      },
+      {
+        "name": "Wheat",
+        "price": 40,
+        "discount": 5,
+        "expiry_date": "2025-11-30"
+      },
+      {
+        "name": "Sugar",
+        "price": 30,
+        "discount": 0,
+        "expiry_date": "2025-10-31"
+      },
+      {
+        "name": "Oats",
+        "price": 60,
+        "discount": 15,
+        "expiry_date": "2025-09-30"
+      },
+      {
+        "name": "Barley",
+        "price": 45,
+        "discount": 7,
+        "expiry_date": "2025-08-31"
+      },
+      {
+        "name": "Maize",
+        "price": 35,
+        "discount": 12,
+        "expiry_date": "2025-07-31"
+      },
+      {
+        "name": "Corn Flour",
+        "price": 25,
+        "discount": 5,
+        "expiry_date": "2025-06-30"
+      },
+      {
+        "name": "Pulses",
+        "price": 40,
+        "discount": 10,
+        "expiry_date": "2025-05-31"
+      },
+      {
+        "name": "Chickpeas",
+        "price": 28,
+        "discount": 8,
+        "expiry_date": "2025-04-30"
+      },
+      {
+        "name": "Lentils",
+        "price": 32,
+        "discount": 5,
+        "expiry_date": "2025-03-31"
+      },
+      {
+        "name": "Split Peas",
+        "price": 27,
+        "discount": 12,
+        "expiry_date": "2025-02-28"
+      },
+      {
+        "name": "Soybeans",
+        "price": 48,
+        "discount": 10,
+        "expiry_date": "2025-01-31"
+      },
+      {
+        "name": "Peanuts",
+        "price": 38,
+        "discount": 15,
+        "expiry_date": "2024-12-31"
+      },
+      {
+        "name": "Cashews",
+        "price": 70,
+        "discount": 8,
+        "expiry_date": "2024-11-30"
+      },
+      {
+        "name": "Almonds",
+        "price": 75,
+        "discount": 5,
+        "expiry_date": "2024-10-31"
+      },
+      {
+        "name": "Pistachios",
+        "price": 80,
+        "discount": 10,
+        "expiry_date": "2024-09-30"
+      },
+      {
+        "name": "Walnuts",
+        "price": 90,
+        "discount": 12,
+        "expiry_date": "2024-08-31"
+      },
+      {
+        "name": "Hazelnuts",
+        "price": 95,
+        "discount": 5,
+        "expiry_date": "2024-07-31"
+      },
+      {
+        "name": "Brazil Nuts",
+        "price": 120,
+        "discount": 10,
+        "expiry_date": "2024-06-30"
+      },
+      {
+        "name": "Macadamia Nuts",
+        "price": 130,
+        "discount": 8,
+        "expiry_date": "2024-05-31"
+      },
+      {
+        "name": "Coconut",
+        "price": 25,
+        "discount": 5,
+        "expiry_date": "2024-04-30"
+      },
+      {
+        "name": "Peanut Butter",
+        "price": 40,
+        "discount": 10,
+        "expiry_date": "2024-03-31"
+      },
+      {
+        "name": "Honey",
+        "price": 55,
+        "discount": 8,
+        "expiry_date": "2024-02-28"
+      },
+      {
+        "name": "Maple Syrup",
+        "price": 60,
+        "discount": 5,
+        "expiry_date": "2024-01-31"
+      },
+      {
+        "name": "Olive Oil",
+        "price": 100,
+        "discount": 15,
+        "expiry_date": "2023-12-31"
+      },
+      {
+        "name": "Sunflower Oil",
+        "price": 50,
+        "discount": 12,
+        "expiry_date": "2023-11-30"
+      },
+      {
+        "name": "Coconut Oil",
+        "price": 70,
+        "discount": 10,
+        "expiry_date": "2023-10-31"
+      },
+      {
+        "name": "Vegetable Oil",
+        "price": 30,
+        "discount": 5,
+        "expiry_date": "2023-09-30"
+      },
+      {
+        "name": "Ghee",
+        "price": 90,
+        "discount": 12,
+        "expiry_date": "2023-08-31"
+      },
+      {
+        "name": "Butter",
+        "price": 60,
+        "discount": 10,
+        "expiry_date": "2023-07-31"
+      },
+      {
+        "name": "Cheese",
+        "price": 120,
+        "discount": 8,
+        "expiry_date": "2023-06-30"
+      },
+      {
+        "name": "Yogurt",
+        "price": 20,
+        "discount": 5,
+        "expiry_date": "2023-05-31"
+      },
+      {
+        "name": "Milk",
+        "price": 35,
+        "discount": 10,
+        "expiry_date": "2023-04-30"
+      }
+    ]
+  }
+  

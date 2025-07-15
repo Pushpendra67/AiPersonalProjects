@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MAGNETIC-ONE | Interactive AI Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        h1 {
+            color: #2c5282;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
+        }
+
+        #output {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 60vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            border: 1px solid #e2e8f0;
+        }
+
+        #output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #output::-webkit-scrollbar-track {
+            background: rgba(44, 82, 130, 0.1);
+            border-radius: 4px;
+        }
+
+        #output::-webkit-scrollbar-thumb {
+            background: rgba(44, 82, 130, 0.3);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease-out;
+            transition: transform 0.2s;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .message:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-header {
+            font-weight: 600;
+            color: #2c5282;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #ebf4ff;
+            display: inline-block;
+            font-size: 1.1em;
+            box-shadow: 0 2px 4px rgba(44, 82, 130, 0.1);
+        }
+
+        .message-content {
+            color: #2d3748;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            font-size: 0.95em;
+        }
+
+        .system-message {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+        }
+
+        .system-message .message-header {
+            background: #4299e1;
+            color: white;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        #message {
+            flex-grow: 1;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            color: #2d3748;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        #message::placeholder {
+            color: #a0aec0;
+        }
+
+        #message:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4299e1, #2c5282);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 82, 130, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(66, 153, 225, 0.3),
+                           0 0 20px rgba(66, 153, 225, 0.2),
+                           0 0 30px rgba(66, 153, 225, 0.1);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(66, 153, 225, 0.5),
+                           0 0 30px rgba(66, 153, 225, 0.3),
+                           0 0 40px rgba(66, 153, 225, 0.2);
+            }
+        }
+
+
+        /* Add this with your other CSS */
+.processing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    background: #ebf8ff;
+    border: 1px solid #bee3f8;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.dots {
+    display: flex;
+    gap: 4px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #4299e1;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { 
+        transform: scale(0);
+    }
+    40% { 
+        transform: scale(1);
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MAGENTIC-ONE</h1>
+        <div id="output"></div>
+        <div class="input-container">
+            <input type="text" id="message" placeholder="Enter your task here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let isProcessing = false;
+        const socket = io();
+        const output = document.getElementById('output');
+        const messageInput = document.getElementById('message');
+
+        socket.on('message', function(msg) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.sender.toLowerCase() === 'system' ? 'system-message' : ''}`;
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            header.textContent = `${msg.sender}`;
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            // Preserve newlines and formatting
+            content.textContent = msg.content;
+            
+            messageDiv.appendChild(header);
+            messageDiv.appendChild(content);
+            output.appendChild(messageDiv);
+            
+            // Smooth scroll to bottom
+            // output.scrollTo({
+            //     top: output.scrollHeight,
+            //     behavior: 'smooth'
+            // });
+        });
+
+        // function sendMessage() {
+        //     const message = messageInput.value;
+        //     if (message.trim()) {
+        //         output.innerHTML = ''; // Clear previous output
+        //         socket.emit('send_message', {message: message});
+        //         messageInput.value = '';
+        //     }
+        // }
+
+
+        function sendMessage() {
+    const message = messageInput.value;
+    if (message.trim() ) {
+        output.innerHTML = ''; // Clear previous output
+        isProcessing = true;
+        
+        // Add processing indicator
+        const processingDiv = document.createElement('div');
+        processingDiv.className = 'processing-indicator';
+        processingDiv.innerHTML = `
+            <div class="message-header">Processing</div>
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        `;
+        output.appendChild(processingDiv);
+        
+        socket.emit('send_message', {message: message});
+        messageInput.value = '';
+    }
+}
+
+        // Allow Enter key to send message
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time AI Response</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body{
+            background-color: rgb(230, 215, 194);
+        }
+        .container {
+            width:90%;
+            margin: 0 auto;
+            padding: 20px;
+            height:90%;
+            background-color: rgb(213, 220, 234);
+        }
+        #output {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px 0;
+            height: 650px;
+            overflow-y: auto;
+            width: 100%;
+            white-space: pre-wrap;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .message-header {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+            padding: 5px 0;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .message-content {
+            padding: 5px 0;
+        }
+        .system-message {
+            background-color: #e9ecef;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        #message {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MAGENTIC-ONE </h1>
+        <div id="output"></div>
+        <div class="input-container">
+            <input type="text" id="message" placeholder="Enter your task here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const output = document.getElementById('output');
+        const messageInput = document.getElementById('message');
+
+        socket.on('message', function(msg) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.sender.toLowerCase() === 'system' ? 'system-message' : ''}`;
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            header.textContent = `${msg.sender}`;
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = msg.content;
+            
+            messageDiv.appendChild(header);
+            messageDiv.appendChild(content);
+            output.appendChild(messageDiv);
+            
+            output.scrollTop = output.scrollHeight;
+        });
+
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message.trim()) {
+                output.innerHTML = ''; // Clear previous output
+                socket.emit('send_message', {message: message});
+                messageInput.value = '';
+            }
+        }
+
+        // Allow Enter key to send message
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>  -->
+
+
+<!-- templates/index.html -->
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time AI Response</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #output {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px 0;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #message {
+            flex-grow: 1;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Assistant</h1>
+        <div id="output"></div>
+        <div class="input-container">
+            <input type="text" id="message" placeholder="Enter your task here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const output = document.getElementById('output');
+        const messageInput = document.getElementById('message');
+
+        socket.on('message', function(msg) {
+            output.innerHTML += msg.data + '\n';
+            output.scrollTop = output.scrollHeight;
+        });
+
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message.trim()) {
+                output.innerHTML = ''; // Clear previous output
+                socket.emit('send_message', {message: message});
+                messageInput.value = '';
+            }
+        }
+
+        // Allow Enter key to send message
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html> -->

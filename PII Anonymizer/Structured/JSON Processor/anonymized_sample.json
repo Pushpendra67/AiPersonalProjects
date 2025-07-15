@@ -1,0 +1,11 @@
+{
+    "id": 1,
+    "name": "<None>",
+    "email": "<None>",
+    "address": {
+        "street": "123 Main St",
+        "city": "<None>",
+        "state": "CA",
+        "non_pii": "reallynotapiiatall"
+    }
+}
